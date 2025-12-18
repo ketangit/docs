@@ -1,0 +1,23 @@
+server:
+  port: 8080
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+app:
+  scenarios:
+    path: /etc/gatling/scenarios
+  results:
+    path: /var/gatling/results
+  s3:
+    bucket: your-gatling-results-bucket
+    region: us-east-1
+  kubernetes:
+    namespace: default
+    jobImage: example/gatling-worker:latest
+    jobServiceAccount: gatling-worker-sa
+    jobCpu: "1000m"
+    jobMemory: "1Gi"
+    nodeSelector: {}
+    tolerations: []

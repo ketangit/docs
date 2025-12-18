@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gatling-results-pvc
+spec:
+  accessModes:
+    - ReadWriteMany   # important: multiple pods can mount
+  resources:
+    requests:
+      storage: 1Gi

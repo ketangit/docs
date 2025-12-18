@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gatling-runner
+  namespace: gatling
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gatling-runner
+  template:
+    metadata:
+      labels:
+        app: gatling-runner
+    spec:
+      serviceAccountName: gatling-runner-sa
+      containers:
+      - name: gatling-runner
+        image: yourrepo/gatling-runner:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MODE
+          value: "web"
+        - name: APP_RESULTS_PATH
+          value: "/var/gatling/results"
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: results
+          mountPath: /var/gatling/results
+      volumes:
+      - name: results
+        persistentVolumeClaim:
+          claimName: gatling-results-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gatling-runner-svc
+  namespace: default
+spec:
+  selector:
+    app: gatling-runner
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
